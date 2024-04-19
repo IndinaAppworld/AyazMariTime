@@ -118,6 +118,8 @@ class RANKMaster(models.Model):
     def __str__(self):
         return self.title
 
+
+
 class DumpData(models.Model):
     id = models.AutoField(primary_key=True,verbose_name='ID2')
     name = models.CharField(max_length=50,blank=False,verbose_name='NAME')

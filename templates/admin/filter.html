@@ -1,0 +1,31 @@
+{% load i18n %}
+
+{% block extrahead %}
+    <!-- Add custom JavaScript -->
+    <script>
+        function handleOptionChange(selectElement) {
+            var selectedValue = selectElement.target.value;
+            console.log(selectedValue)
+            // Get the existing URL
+            var baseUrl = window.location.href.split('?')[0];
+            // Create the new URL with the encoded value
+            var newUrl = baseUrl + selectedValue;
+            // Redirect to the new URL
+            window.location.href = newUrl;
+        }
+    </script>
+{% endblock %}
+
+<div data-filter-title="{{ title }}" open>
+    <label>
+        {% blocktranslate with filter_title=title %}  By {{ filter_title }} {% endblocktranslate %}
+    </label>
+    <select name="{{ title }}" id="{{ title }}" onchange="handleOptionChange(event)">
+    {% for choice in choices %}
+        <option value="{{ choice.query_string|iriencode }}" {% if choice.selected %} selected {% endif %}>{{ choice.display }}</option>
+    {% endfor %}
+    </select>
+</div>
+
+ 
+
