@@ -21,3 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('',include('AyazMariTimeApp.urls'))
 ]
+
+
+admin.site.site_header = "AyazMariTime Admin"
+admin.site.site_title = "AyazMariTime Admin Portal"
+admin.site.index_title = "Welcome to AyazMariTime Admin Portal"
