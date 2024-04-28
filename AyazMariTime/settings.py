@@ -23,11 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^jp4^t_6)8t0!=rq*)$xd3*bb(ex#y)0hygk-fp)h(v2vdlpb3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 DISABLE_DARK_MODE = False
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -90,9 +92,9 @@ DATABASES = {
 'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ayazmaritimedb2',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'USER': 'i9854760_qjtr1',
+        'PASSWORD': '(3Tx8jl*qQis',
+        'HOST': '118.139.180.41',
         'PORT': '3306',
     }
 }

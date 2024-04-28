@@ -1,3 +1,4 @@
+# name,customid,pay1,pay2,alvdate,onb,mobno,dob,cdc,passport,agn,cno,comp,remarks,currency_id,eng_id,flag_id,pay_id,pump_id,sc_id,ship2_id,visa_id,vs_id,vt_id,rank_id,rank2_id
 import csv
 from io import StringIO
 
@@ -28,6 +29,7 @@ from AyazMariTimeApp.resource import DumpDataResource
 # admin.site.register(SHIP2Master)
 # admin.site.register(PUMPMaster)
 # admin.site.register(ENGMaster)
+
 
 
 # class EventAdminSite(AdminSite):
@@ -95,6 +97,7 @@ from AyazMariTimeApp.resource import DumpDataResource
 
 class CustomUserAdmin(BaseUserAdmin):
     list_display = ('username', 'first_name','last_name','last_login_with_time')
+    site_url = None
 
     def last_login_with_time(self, obj):
         return obj.last_login.strftime("%d-%m-%Y %H:%M:%S")
@@ -123,7 +126,7 @@ class DumpDataAdmin(ImportExportModelAdmin):
     actions_on_bottom = False
     date_hierarchy = 'alvdate'
     model = DumpData
-    list_per_page = 20
+    list_per_page = 100
     list_display = ('id', 'name', 'vt', 'vs', 'rank', 'rank2', 'flag', 'customid',
                     'pay1', 'currency', 'pay2', 'alvdate', 'onb', 'ship2', 'mobno', 'pump',
                     'eng', 'dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp')
