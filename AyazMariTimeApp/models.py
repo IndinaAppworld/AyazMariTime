@@ -122,12 +122,12 @@ class RANKMaster(models.Model):
 
 class DumpData(models.Model):
     id = models.AutoField(primary_key=True,verbose_name='ID2')
-    name = models.CharField(max_length=50,blank=False,verbose_name='NAME')
+    name = models.CharField(max_length=50,blank=True,verbose_name='NAME')
     vt = models.ForeignKey(VTMaster, on_delete=models.CASCADE, null=True,verbose_name='VT',blank=False,default=16)
     vs = models.ForeignKey(VSMaster, on_delete=models.CASCADE, null=True,verbose_name='VS',blank=False,default=6)
     rank = models.ForeignKey(RANKMaster, on_delete=models.CASCADE, null=True,verbose_name='RANK',blank=False,related_name='dumpdata_set',default=9)
     rank2 =models.ForeignKey(RANKMaster, on_delete=models.CASCADE, null=True,verbose_name='RANK2',blank=False,related_name='dumpdata_set2',default=9)
-    mobno=models.BigIntegerField(max_length=15,blank=True,verbose_name='MOBILE NO',unique=True,default='')
+    mobno=models.CharField(max_length=20,blank=True,verbose_name='MOBILE NO',unique=True,default='')
 
     flag = models.ForeignKey(FLAGMaster, on_delete=models.CASCADE, null=True,verbose_name='FLAG',blank=False,default=21)
     customid=models.CharField(max_length=50,blank=True,verbose_name='ID',unique=True,null=True)
@@ -155,6 +155,9 @@ class DumpData(models.Model):
     cno = models.CharField(max_length=50,blank=True,verbose_name='CNO')
     comp = models.CharField(max_length=50,blank=True,verbose_name='COMP')
     remarks = models.CharField(max_length=500,blank=True,verbose_name='REMARKS')
+    createdate = models.DateTimeField(auto_now_add=True,null=True,blank=True )
+    updatedate = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+
     # createdat=models.DateTimeField(default=timezone.now)
 
     def __str__(self):

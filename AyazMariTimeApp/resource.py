@@ -1,13 +1,11 @@
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 
-from .models import DumpData,VTMaster
-
+from .models import DumpData, VTMaster
 
 
 class DumpDataResource(resources.ModelResource):
     # name = fields.Field(column_name='Name')
-
 
     ONBOARD_CHOICES = {
         '1': 'YES',
@@ -45,34 +43,51 @@ class DumpDataResource(resources.ModelResource):
 
     class Meta:
         model = DumpData
-        fields=('custom_key_name_ID2','custom_key_name_NAME','mobno','foreign_key_name_VT', 'foreign_key_name_VS', 'foreign_key_name_RANK', 'foreign_key_name_RANK2',
-                         'foreign_key_name_FLAG', 'customid', 'pay1', 'pay2', 'foreign_key_name_CURRENCY', 'alvdate', 'foreign_key_name_ONBOARD',
-                         'foreign_key_name_SHIP2', 'foreign_key_name_PUMP', 'foreign_key_name_ENG',
-                         'dob', 'cdc', 'passport', 'foreign_key_name_VISA', 'agn', 'foreign_key_name_SC', 'foreign_key_name_PAY', 'cno', 'comp', 'remarks')
-        export_order = ( 'custom_key_name_ID2','custom_key_name_NAME','custom_key_name_MOBILENO','foreign_key_name_VT', 'foreign_key_name_VS', 'foreign_key_name_RANK', 'foreign_key_name_RANK2',
-                         'foreign_key_name_FLAG', 'custom_key_name_ID', 'custom_key_name_PAY1', 'custom_key_name_PAY2', 'foreign_key_name_CURRENCY', 'custom_key_name_AVAIBILITYDATE', 'foreign_key_name_ONBOARD',
-                         'foreign_key_name_SHIP2', 'foreign_key_name_PUMP', 'foreign_key_name_ENG',
-                         'custom_key_name_DATEOFBIRTH', 'custom_key_name_CDC', 'custom_key_name_PASSPORT', 'foreign_key_name_VISA', 'custom_key_name_AGN', 'foreign_key_name_SC', 'foreign_key_name_PAY', 'custom_key_name_CNO', 'custom_key_name_COMP', 'custom_key_name_REMARKS')  # Specify the export order
+        fields = ('custom_key_name_ID2', 'custom_key_name_NAME', 'mobno', 'foreign_key_name_VT', 'foreign_key_name_VS',
+                  'foreign_key_name_RANK', 'foreign_key_name_RANK2',
+                  'foreign_key_name_FLAG', 'customid', 'pay1', 'pay2', 'foreign_key_name_CURRENCY', 'alvdate',
+                  'foreign_key_name_ONBOARD',
+                  'foreign_key_name_SHIP2', 'foreign_key_name_PUMP', 'foreign_key_name_ENG',
+                  'dob', 'cdc', 'passport', 'foreign_key_name_VISA', 'agn', 'foreign_key_name_SC',
+                  'foreign_key_name_PAY', 'cno', 'comp', 'remarks')
 
-        exclude=('id','name', 'vt', 'vs', 'rank', 'rank2', 'mobno', 'flag', 'customid', 'pay1', 'pay2', 'currency', 'alvdate', 'onb', 'ship2', 'pump', 'eng', 'dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp', 'remarks')
+        export_order = (
+            'custom_key_name_ID2', 'custom_key_name_NAME', 'custom_key_name_MOBILENO', 'foreign_key_name_VT',
+            'foreign_key_name_VS', 'foreign_key_name_RANK', 'foreign_key_name_RANK2',
+            'foreign_key_name_FLAG', 'custom_key_name_ID', 'custom_key_name_PAY1', 'custom_key_name_PAY2',
+            'foreign_key_name_CURRENCY', 'custom_key_name_AVAIBILITYDATE', 'foreign_key_name_ONBOARD',
+            'foreign_key_name_SHIP2', 'foreign_key_name_PUMP', 'foreign_key_name_ENG',
+            'custom_key_name_DATEOFBIRTH', 'custom_key_name_CDC', 'custom_key_name_PASSPORT', 'foreign_key_name_VISA',
+            'custom_key_name_AGN', 'foreign_key_name_SC', 'foreign_key_name_PAY', 'custom_key_name_CNO',
+            'custom_key_name_COMP', 'custom_key_name_REMARKS')  # Specify the export order
+
+        exclude = (
+            'id', 'name', 'vt', 'vs', 'rank', 'rank2', 'mobno', 'flag', 'customid', 'pay1', 'pay2', 'currency',
+            'alvdate',
+            'onb', 'ship2', 'pump', 'eng', 'dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp',
+            'remarks')
 
     def dehydrate_foreign_key_name_VT(self, obj):
         return obj.vt.title
+
     def dehydrate_foreign_key_name_VS(self, obj):
         return obj.vs.title
+
     def dehydrate_foreign_key_name_RANK(self, obj):
         return obj.rank.title
+
     def dehydrate_foreign_key_name_RANK2(self, obj):
         return obj.rank.title
 
     def dehydrate_foreign_key_name_CURRENCY(self, obj):
         return obj.currency.title
+
     def dehydrate_foreign_key_name_FLAG(self, obj):
         return obj.flag.title
 
     def dehydrate_foreign_key_name_ONBOARD(self, obj):
-        flag_value = getattr(obj, 'onb')  # Get the value of the choice field
-        return self.ONBOARD_CHOICES.get(flag_value, flag_value)  # Return human-readable value or original value if not found
+        flag_value = getattr(obj, 'onb')
+        return self.ONBOARD_CHOICES.get(flag_value, flag_value)
 
     def dehydrate_foreign_key_name_SHIP2(self, obj):
         return obj.ship2.title
@@ -133,8 +148,3 @@ class DumpDataResource(resources.ModelResource):
 
     def dehydrate_custom_key_name_ID2(self, obj):
         return obj.id
-
-
-
-
-
