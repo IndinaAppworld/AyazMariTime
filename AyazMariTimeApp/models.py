@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -114,6 +116,7 @@ class RANKMaster(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     status = models.CharField(choices=ACTIVE_CHOICES, max_length=10, default='1')
+    orderid = models.IntegerField(max_length=3,verbose_name='Ordering ID',unique=True)
 
     def __str__(self):
         return self.title
@@ -123,13 +126,15 @@ class RANKMaster(models.Model):
 class DumpData(models.Model):
     id = models.AutoField(primary_key=True,verbose_name='ID2')
     name = models.CharField(max_length=50,blank=True,verbose_name='NAME')
-    vt = models.ForeignKey(VTMaster, on_delete=models.CASCADE, null=True,verbose_name='VT',blank=False,default=16)
+    vt = models.ForeignKey(VTMaster, on_delete=models.CASCADE, null=True,verbose_name='VT',blank=False,default=17)
     vs = models.ForeignKey(VSMaster, on_delete=models.CASCADE, null=True,verbose_name='VS',blank=False,default=6)
-    rank = models.ForeignKey(RANKMaster, on_delete=models.CASCADE, null=True,verbose_name='RANK',blank=False,related_name='dumpdata_set',default=9)
-    rank2 =models.ForeignKey(RANKMaster, on_delete=models.CASCADE, null=True,verbose_name='RANK2',blank=False,related_name='dumpdata_set2',default=9)
-    mobno=models.CharField(max_length=20,blank=True,verbose_name='MOBILE NO',unique=True,default='')
+    rank = models.ForeignKey(RANKMaster, on_delete=models.CASCADE, null=True,verbose_name='RANK',blank=False,related_name='dumpdata_set',default=35)
+    rank2 =models.ForeignKey(RANKMaster, on_delete=models.CASCADE, null=True,verbose_name='RANK2',blank=False,related_name='dumpdata_set2',default=35)
+    mobno=models.CharField(max_length=20,blank=True,verbose_name='MOBILE NO',unique=True,default='',null=True)
+    emailid=models.CharField(max_length=50,blank=True,verbose_name='EMAIL ID',default='',null=True)
 
-    flag = models.ForeignKey(FLAGMaster, on_delete=models.CASCADE, null=True,verbose_name='FLAG',blank=False,default=21)
+
+    flag = models.ForeignKey(FLAGMaster, on_delete=models.CASCADE, null=True,verbose_name='FLAG',blank=False,default=32)
     customid=models.CharField(max_length=50,blank=True,verbose_name='ID',unique=True,null=True)
 
     pay1=models.BigIntegerField(max_length=10,blank=True,verbose_name='PAY 1')
@@ -147,18 +152,85 @@ class DumpData(models.Model):
 
     cdc = models.CharField(max_length=50,blank=True,verbose_name='CDC')
     passport = models.CharField(max_length=50,blank=True,verbose_name='PASSPORT',unique=True,default='',null=True)
-    visa = models.ForeignKey(VISAMaster, on_delete=models.CASCADE, null=True,verbose_name='VISA',blank=False,default=3)
+    visa = models.ForeignKey(VISAMaster, on_delete=models.CASCADE, null=True,verbose_name='VISA',blank=False,default=8)
     agn = models.CharField(max_length=50,blank=True,verbose_name='AGN')
     # gap = models.ForeignKey(GAPMaster, on_delete=models.CASCADE, null=True,verbose_name='GAP',blank=False)
     sc = models.ForeignKey(SCMaster, on_delete=models.CASCADE, null=True,verbose_name='SC',blank=False,default=3)
     pay = models.ForeignKey(PAYMaster, on_delete=models.CASCADE, null=True,verbose_name='PAY',blank=False,default=6)
     cno = models.CharField(max_length=50,blank=True,verbose_name='CNO')
     comp = models.CharField(max_length=50,blank=True,verbose_name='COMP')
+
+    vf = models.CharField(max_length=100,blank=True,verbose_name='VF')
+    vn = models.CharField(max_length=100,blank=True,verbose_name='VN')
+    doc = models.CharField(max_length=100,blank=True,verbose_name='DOC')
+    so = models.CharField(max_length=100,blank=True,verbose_name='SO')
+    sof = models.CharField(max_length=100,blank=True,verbose_name='SOF')
+    doc1 = models.CharField(max_length=100,blank=True,verbose_name='DOC')
+
+
     remarks = models.CharField(max_length=500,blank=True,verbose_name='REMARKS')
-    createdate = models.DateTimeField(auto_now_add=True,null=True,blank=True )
+    createdate = models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updatedate = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.updatedate = self.active
+
+    def save(self, *args, **kwargs):
+        #if self.is_active and not self.__is_active:
+        self.updatedate = datetime.now()
+
+        if self.name!=None:
+             self.name = self.name.upper()
+
+        if self.customid!=None:
+            self.customid = self.customid.upper()
+
+        if self.cdc!=None:
+             self.cdc = self.cdc.upper()
+
+        if self.emailid!=None:
+             self.emailid = self.emailid.upper()
+
+        if self.passport!=None:
+            self.passport = self.passport.upper()
+
+        if self.agn!=None:
+            self.agn = self.agn.upper()
+
+        if self.cno!=None:
+             self.cno = self.cno.upper()
+
+        if self.comp!=None:
+             self.comp = self.comp.upper()
+
+        if self.vf!=None:
+             self.vf = self.vf.upper()
+
+        if self.vn!=None:
+            self.vn = self.vn.upper()
+
+        if self.doc != None:
+            self.doc = self.doc.upper()
+
+        if self.so != None:
+            self.so = self.so.upper()
+
+        if self.sof != None:
+            self.sof = self.sof.upper()
+
+        if self.doc1 != None:
+            self.doc1 = self.doc1.upper()
+
+        if self.remarks != None:
+            self.remarks = self.remarks.upper()
+
+        super().save(*args, **kwargs)
+
 
     # createdat=models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
+
+

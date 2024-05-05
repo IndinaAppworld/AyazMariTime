@@ -41,30 +41,42 @@ class DumpDataResource(resources.ModelResource):
     custom_key_name_REMARKS = fields.Field(column_name='REMARKS')
     custom_key_name_ID2 = fields.Field(column_name='ID2')
 
+    custom_key_name_VF = fields.Field(column_name='VF')
+    custom_key_name_VN = fields.Field(column_name='VN')
+    custom_key_name_DOC = fields.Field(column_name='DOC')
+    custom_key_name_SO = fields.Field(column_name='SO')
+    custom_key_name_SOF = fields.Field(column_name='SOF')
+    custom_key_name_DOC1 = fields.Field(column_name='DOC1')
+    custom_key_name_UPDATEDDATE = fields.Field(column_name='LAST UPDATE DATE')
+    custom_key_name_EMAILID = fields.Field(column_name='EMAIL ID')
+
     class Meta:
         model = DumpData
-        fields = ('custom_key_name_ID2', 'custom_key_name_NAME', 'mobno', 'foreign_key_name_VT', 'foreign_key_name_VS',
+        fields = ('custom_key_name_ID2', 'custom_key_name_NAME','custom_key_name_UPDATEDDATE', 'mobno','custom_key_name_EMAILID', 'foreign_key_name_VT', 'foreign_key_name_VS',
                   'foreign_key_name_RANK', 'foreign_key_name_RANK2',
                   'foreign_key_name_FLAG', 'customid', 'pay1', 'pay2', 'foreign_key_name_CURRENCY', 'alvdate',
                   'foreign_key_name_ONBOARD',
                   'foreign_key_name_SHIP2', 'foreign_key_name_PUMP', 'foreign_key_name_ENG',
-                  'dob', 'cdc', 'passport', 'foreign_key_name_VISA', 'agn', 'foreign_key_name_SC',
+                  'dob', 'cdc', 'passport', 'foreign_key_name_VISA',
+                  'custom_key_name_VF','custom_key_name_VN','custom_key_name_DOC','custom_key_name_SO','custom_key_name_SOF','custom_key_name_DOC1'
+                  'agn', 'foreign_key_name_SC',
                   'foreign_key_name_PAY', 'cno', 'comp', 'remarks')
 
         export_order = (
-            'custom_key_name_ID2', 'custom_key_name_NAME', 'custom_key_name_MOBILENO', 'foreign_key_name_VT',
+            'custom_key_name_ID2', 'custom_key_name_NAME', 'custom_key_name_UPDATEDDATE','custom_key_name_MOBILENO', 'custom_key_name_EMAILID','foreign_key_name_VT',
             'foreign_key_name_VS', 'foreign_key_name_RANK', 'foreign_key_name_RANK2',
             'foreign_key_name_FLAG', 'custom_key_name_ID', 'custom_key_name_PAY1', 'custom_key_name_PAY2',
             'foreign_key_name_CURRENCY', 'custom_key_name_AVAIBILITYDATE', 'foreign_key_name_ONBOARD',
             'foreign_key_name_SHIP2', 'foreign_key_name_PUMP', 'foreign_key_name_ENG',
             'custom_key_name_DATEOFBIRTH', 'custom_key_name_CDC', 'custom_key_name_PASSPORT', 'foreign_key_name_VISA',
-            'custom_key_name_AGN', 'foreign_key_name_SC', 'foreign_key_name_PAY', 'custom_key_name_CNO',
+            'custom_key_name_VF', 'custom_key_name_VN', 'custom_key_name_DOC', 'custom_key_name_SO',
+            'custom_key_name_SOF', 'custom_key_name_DOC1','custom_key_name_AGN', 'foreign_key_name_SC', 'foreign_key_name_PAY', 'custom_key_name_CNO',
             'custom_key_name_COMP', 'custom_key_name_REMARKS')  # Specify the export order
 
         exclude = (
-            'id', 'name', 'vt', 'vs', 'rank', 'rank2', 'mobno', 'flag', 'customid', 'pay1', 'pay2', 'currency',
+            'id', 'name', 'vt', 'vs', 'rank', 'rank2', 'mobno','emailid', 'flag', 'customid', 'pay1', 'pay2', 'currency',
             'alvdate',
-            'onb', 'ship2', 'pump', 'eng', 'dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp',
+            'onb', 'ship2', 'pump', 'eng', 'dob', 'cdc', 'passport', 'visa','vc','vf','doc','so','sof','doc1', 'agn', 'sc', 'pay', 'cno', 'comp',
             'remarks')
 
     def dehydrate_foreign_key_name_VT(self, obj):
@@ -148,3 +160,33 @@ class DumpDataResource(resources.ModelResource):
 
     def dehydrate_custom_key_name_ID2(self, obj):
         return obj.id
+
+
+    def dehydrate_custom_key_name_VF(self, obj):
+        return obj.vf
+
+    def dehydrate_custom_key_name_VN(self, obj):
+        return obj.vn
+
+    def dehydrate_custom_key_name_DOC(self, obj):
+        return obj.doc
+
+    def dehydrate_custom_key_name_SO(self, obj):
+        return obj.so
+
+    def dehydrate_custom_key_name_SOF(self, obj):
+        return obj.sof
+
+    def dehydrate_custom_key_name_DOC1(self, obj):
+        return obj.doc1
+
+    def dehydrate_custom_key_name_EMAILID(self, obj):
+        return obj.emailid
+
+    def dehydrate_custom_key_name_UPDATEDDATE(self, obj):
+
+        if obj.updatedate!=None:
+            return obj.updatedate.strftime("%d/%m/%Y %H:%M")
+        else:
+            ""
+

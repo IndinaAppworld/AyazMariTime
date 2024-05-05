@@ -127,15 +127,45 @@ class DumpDataAdmin(ImportExportModelAdmin):
     date_hierarchy = 'alvdate'
     model = DumpData
     list_per_page = 100
-    list_display = ('id', 'name', 'vt', 'vs', 'rank', 'rank2', 'flag', 'customid',
-                    'pay1', 'currency', 'pay2', 'alvdate', 'onb', 'ship2', 'mobno', 'pump',
-                    'eng', 'dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp')
+
+    list_display = ('id', 'name', 'formatted_updatedatetime','vt', 'vs', 'rank', 'rank2', 'flag', 'customid',
+                    'pay1', 'currency', 'pay2', 'formatted_avaibilitydata', 'onb', 'ship2', 'mobno','emailid', 'pump',
+                    'eng', 'formatted_dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp')
+
+    def formatted_updatedatetime(self,obj):
+        return obj.updatedate.strftime("%d/%m/%Y %H:%M")
+
+    def formatted_avaibilitydata(self, obj):
+        if obj.alvdate != None:
+            return obj.alvdate.strftime("%d/%m/%Y")
+        else:
+            return ""
+
+    def formatted_dob(self, obj):
+        if obj.dob != None:
+            return obj.dob.strftime("%d/%m/%Y")
+        else:
+            return ""
+
+    formatted_updatedatetime.short_description = 'Last Update Date'
+    formatted_avaibilitydata.short_description = 'Avl. Date'
+    formatted_dob.short_description = 'DOB'
+
+
     list_filter = ['vt', 'vs', 'rank', 'rank2', 'flag', 'onb', 'flag', 'ship2', 'pump', 'eng', 'currency',
                    'visa', 'sc', 'pay', 'alvdate']
-    search_fields = ('name', 'mobno', 'customid', 'passport', 'remarks')
+    search_fields = ('name', 'mobno', 'customid', 'passport', 'remarks','emailid','customid',
+                                                                                  'cdc','agn','cno','comp','vf','vn','doc',
+                     'so','sof','doc1')
     # formfield_overrides = {
     #     models.TextField: {'remarks': forms.Textarea(attrs={'rows': 4, 'cols': 40})},
     # }
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in self.fields:
+            if isinstance(self.cleaned_data.get(field), str):
+                self.cleaned_data[field] = self.cleaned_data[field].upper()
+        return cleaned_data
 
     def generate_sample_csv(self, request, queryset):
         # Generate sample CSV content
@@ -178,6 +208,14 @@ class DumpDataAdmin(ImportExportModelAdmin):
         # if request.user.is_superuser:
         #     return True
         return False
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "rank":
+            kwargs["queryset"] = RANKMaster.objects.exclude(orderid=0).order_by('orderid')
+        elif db_field.name == "rank2":
+            # Modify this according to your field name and ordering requirements
+            kwargs["queryset"] = RANKMaster.objects.exclude(orderid=0).order_by('orderid')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 admin.site.register(DumpData, DumpDataAdmin)
@@ -253,5 +291,5 @@ class PAYMasterAdmin(admin.ModelAdmin):
 @admin.register(RANKMaster)
 class RANKMasterAdmin(admin.ModelAdmin):
     model = RANKMaster
-    list_display = ('id', 'title', 'status')
+    list_display = ('id', 'title', 'orderid','status')
     # ordering = ['title']

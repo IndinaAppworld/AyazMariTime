@@ -1,0 +1,19 @@
+pip3 install django
+pip3 installl django-admin-list-filter-dropdown==1.0.3
+pip3 install django-admin-rangefilter==0.12.4
+pip3 install django-import-export==3.3.8
+pip3 install mysql==0.0.3
+
+alter table AyazMariTimeApp_dumpdata add column vf varchar(100);
+alter table AyazMariTimeApp_dumpdata add column vn varchar(100);
+alter table AyazMariTimeApp_dumpdata add column doc varchar(100);
+alter table AyazMariTimeApp_dumpdata add column so varchar(100);
+alter table AyazMariTimeApp_dumpdata add column sof varchar(100);
+alter table AyazMariTimeApp_dumpdata add column doc1 varchar(100);
+alter table AyazMariTimeApp_dumpdata add column emailid varchar(50);
+
+ALTER TABLE `AyazMariTimeApp_rankmaster` ADD `orderid` INT(3) NOT NULL AFTER `status`;
+
+
+
+
