@@ -169,16 +169,28 @@ class DumpDataResource(resources.ModelResource):
         return obj.vn
 
     def dehydrate_custom_key_name_DOC(self, obj):
-        return obj.doc
+        if obj.doc != None:
+            return obj.doc.strftime("%d/%m/%Y")
+        else:
+            ""
 
     def dehydrate_custom_key_name_SO(self, obj):
-        return obj.so
+        if obj.so != None:
+            return obj.so.strftime("%d/%m/%Y")
+        else:
+            ""
 
     def dehydrate_custom_key_name_SOF(self, obj):
-        return obj.sof
+        if obj.sof != None:
+            return obj.sof.strftime("%d/%m/%Y")
+        else:
+            ""
 
     def dehydrate_custom_key_name_DOC1(self, obj):
-        return obj.doc1
+        if obj.doc1!=None:
+            return obj.doc1.strftime("%d/%m/%Y")
+        else:
+            ""
 
     def dehydrate_custom_key_name_EMAILID(self, obj):
         return obj.emailid

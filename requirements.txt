@@ -16,4 +16,5 @@ ALTER TABLE `AyazMariTimeApp_rankmaster` ADD `orderid` INT(3) NOT NULL AFTER `st
 
 
 
+update AyazMariTimeApp_dumpdata set doc=null, so=null,sof=null, doc1=null;
 

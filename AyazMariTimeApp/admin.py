@@ -130,7 +130,8 @@ class DumpDataAdmin(ImportExportModelAdmin):
 
     list_display = ('id', 'name', 'formatted_updatedatetime','vt', 'vs', 'rank', 'rank2', 'flag', 'customid',
                     'pay1', 'currency', 'pay2', 'formatted_avaibilitydata', 'onb', 'ship2', 'mobno','emailid', 'pump',
-                    'eng', 'formatted_dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp')
+                    'eng', 'formatted_dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp','vf','vn','formatted_doc',
+                    'formatted_so','formatted_sof','formatted_doc1')
 
     def formatted_updatedatetime(self,obj):
         return obj.updatedate.strftime("%d/%m/%Y %H:%M")
@@ -147,9 +148,37 @@ class DumpDataAdmin(ImportExportModelAdmin):
         else:
             return ""
 
+    def formatted_doc(self, obj):
+        if obj.doc != None:
+            return obj.doc.strftime("%d/%m/%Y")
+        else:
+            return ""
+
+    def formatted_so(self, obj):
+        if obj.so != None:
+            return obj.so.strftime("%d/%m/%Y")
+        else:
+            return ""
+
+    def formatted_sof(self, obj):
+        if obj.sof != None:
+            return obj.sof.strftime("%d/%m/%Y")
+        else:
+            return ""
+
+    def formatted_doc1(self, obj):
+        if obj.doc1 != None:
+            return obj.doc1.strftime("%d/%m/%Y")
+        else:
+            return ""
+
     formatted_updatedatetime.short_description = 'Last Update Date'
     formatted_avaibilitydata.short_description = 'Avl. Date'
     formatted_dob.short_description = 'DOB'
+    formatted_doc.short_description="DOC"
+    formatted_so.short_description="SO"
+    formatted_sof.short_description="SOF"
+    formatted_doc1.short_description="DOC1"
 
 
     list_filter = ['vt', 'vs', 'rank', 'rank2', 'flag', 'onb', 'flag', 'ship2', 'pump', 'eng', 'currency',

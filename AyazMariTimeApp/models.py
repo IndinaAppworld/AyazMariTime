@@ -162,10 +162,10 @@ class DumpData(models.Model):
 
     vf = models.CharField(max_length=100,blank=True,verbose_name='VF')
     vn = models.CharField(max_length=100,blank=True,verbose_name='VN')
-    doc = models.CharField(max_length=100,blank=True,verbose_name='DOC')
-    so = models.CharField(max_length=100,blank=True,verbose_name='SO')
-    sof = models.CharField(max_length=100,blank=True,verbose_name='SOF')
-    doc1 = models.CharField(max_length=100,blank=True,verbose_name='DOC')
+    doc = models.DateField(blank=True,verbose_name='DOC',default='',null=True)
+    so = models.DateField(blank=True,verbose_name='SO',default='',null=True)
+    sof = models.DateField(blank=True,verbose_name='SOF',default='',null=True)
+    doc1 = models.DateField(blank=True,verbose_name='DOC1',default='',null=True)
 
 
     remarks = models.CharField(max_length=500,blank=True,verbose_name='REMARKS')
@@ -210,20 +210,19 @@ class DumpData(models.Model):
         if self.vn!=None:
             self.vn = self.vn.upper()
 
-        if self.doc != None:
-            self.doc = self.doc.upper()
 
-        if self.so != None:
-            self.so = self.so.upper()
-
-        if self.sof != None:
-            self.sof = self.sof.upper()
-
-        if self.doc1 != None:
-            self.doc1 = self.doc1.upper()
 
         if self.remarks != None:
             self.remarks = self.remarks.upper()
+
+
+        # if not self.pk:
+        #     # This is a new object, so record the creator
+        #     self.created_by = request.user
+        # else:
+        #     # This is an existing object, so record the editor
+        #     self.modified_by = request.user
+
 
         super().save(*args, **kwargs)
 
