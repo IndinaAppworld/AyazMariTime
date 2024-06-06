@@ -118,6 +118,9 @@ class RANKMaster(models.Model):
     status = models.CharField(choices=ACTIVE_CHOICES, max_length=10, default='1')
     orderid = models.IntegerField(max_length=3,verbose_name='Ordering ID',unique=True)
 
+    class Meta:
+        ordering = ['orderid']
+
     def __str__(self):
         return self.title
 

@@ -126,7 +126,7 @@ class DumpDataAdmin(ImportExportModelAdmin):
     actions_on_bottom = False
     date_hierarchy = 'alvdate'
     model = DumpData
-    list_per_page = 100
+
 
     list_display = ('id', 'name', 'formatted_updatedatetime','vt', 'vs', 'rank', 'rank2', 'flag', 'customid',
                     'pay1', 'currency', 'pay2', 'formatted_avaibilitydata', 'onb', 'ship2', 'mobno','emailid', 'pump',
@@ -186,6 +186,25 @@ class DumpDataAdmin(ImportExportModelAdmin):
     search_fields = ('name', 'mobno', 'customid', 'passport', 'remarks','emailid','customid',
                                                                                   'cdc','agn','cno','comp','vf','vn','doc',
                      'so','sof','doc1')
+
+    # list_filter = ['vt']
+
+    # def get_queryset(self, request):
+    #     qs = super().get_queryset(request)
+    #     filters_applied = any(param for param in request.GET if
+    #                           param in self.list_filter or param.startswith('filter__') or param in ['o', 'q'])
+    #
+    #     # Debug: Print applied filters
+    #     if filters_applied:
+    #         print("Filters applied:", request.GET)
+    #     else:
+    #         print("No filters applied")
+    #
+    #     if filters_applied:
+    #         return qs
+    #     else:
+    #         return qs.none()
+
     # formfield_overrides = {
     #     models.TextField: {'remarks': forms.Textarea(attrs={'rows': 4, 'cols': 40})},
     # }
@@ -245,6 +264,14 @@ class DumpDataAdmin(ImportExportModelAdmin):
             # Modify this according to your field name and ordering requirements
             kwargs["queryset"] = RANKMaster.objects.exclude(orderid=0).order_by('orderid')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def changelist_view(self, request, extra_context=None):
+        if request.user.is_superuser:
+            self.list_per_page = 100
+        else:
+            self.list_per_page = 10
+        return super().changelist_view(request, extra_context=extra_context)
+
 
 
 admin.site.register(DumpData, DumpDataAdmin)
@@ -321,4 +348,7 @@ class PAYMasterAdmin(admin.ModelAdmin):
 class RANKMasterAdmin(admin.ModelAdmin):
     model = RANKMaster
     list_display = ('id', 'title', 'orderid','status')
-    # ordering = ['title']
+
+    class Meta:
+        ordering = ['orderid']
+        # ordering = ['title']
