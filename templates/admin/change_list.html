@@ -19,11 +19,14 @@
     <style>
       #changelist table thead th:first-child {width: inherit}
     </style>
+
+
   {% endif %}
 {% endblock %}
 
 {% block extrahead %}
 {{ block.super }}
+
 {{ media.js }}
 <script src="{% static 'admin/js/filters.js' %}" defer></script>
 {% endblock %}
@@ -50,6 +53,7 @@
             {% change_list_object_tools %}
           {% endblock %}
         </ul>
+
     {% endblock %}
     {% if cl.formset and cl.formset.errors %}
         <p class="errornote">

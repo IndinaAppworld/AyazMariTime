@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload CSV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
+            padding-left: 30px;
+        }
+
+        .file-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .file-input-wrapper {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #b22222;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #b22222;
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .file-input-wrapper:hover {
+            background-color: #b22222;
+            color: white;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+
+        .filename-display {
+            font-size: 14px;
+            color: #333;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        button {
+            background-color: #b22222;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #a11d1d;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload CSV to Import DumpData</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="file-upload-container">
+            <label class="file-input-wrapper">
+                Choose CSV File
+                <input type="file" name="csv_file" accept=".csv" required onchange="updateFileName(this)">
+            </label>
+            <span id="filename" class="filename-display">No file chosen</span>
+        </div>
+        <button type="submit">Upload CSV</button>
+    </form>
+
+    <script>
+        function updateFileName(input) {
+            const fileName = input.files.length > 0 ? input.files[0].name : 'No file chosen';
+            document.getElementById('filename').textContent = fileName;
+        }
+    </script>
+</body>
+</html>

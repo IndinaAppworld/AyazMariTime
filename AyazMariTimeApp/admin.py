@@ -1,12 +1,19 @@
 # name,customid,pay1,pay2,alvdate,onb,mobno,dob,cdc,passport,agn,cno,comp,remarks,currency_id,eng_id,flag_id,pay_id,pump_id,sc_id,ship2_id,visa_id,vs_id,vt_id,rank_id,rank2_id
 import csv
+from datetime import timedelta
 from io import StringIO
+from django.contrib.admin.filters import DateFieldListFilter
 
 from django.contrib import admin
-from django.contrib.admin import AdminSite, sites
+from django.contrib.admin import AdminSite, sites, SimpleListFilter
 from django.contrib import admin
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper, AdminDateWidget
 from django.forms import models
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.urls import path, reverse
+from django.utils import timezone
+from django.utils.html import format_html
 from rangefilter.filters import DateRangeFilter
 
 # // ./manage.py makemigrations AyazMariTimeApp
@@ -94,6 +101,106 @@ from AyazMariTimeApp.resource import DumpDataResource
 # mysite = EventAdminSite()
 # admin.site = mysite
 # sites.site = mysite
+from django.utils.translation import gettext_lazy as _
+
+
+class AlvDateLastTwoMonthsFilter(SimpleListFilter):
+    title = _('ALV Date')
+    parameter_name = 'alvdate'
+
+    def lookups(self, request, model_admin):
+        return (
+            # ('any', _('Any Date')),
+            ('today', _('Today')),
+            ('past_7_days', _('Past 7 Days')),
+            ('this_month', _('This Month')),
+            ('last_2_months', _('Last 2 Months')),
+            ('has_date', _('Has Date')),
+            ('no_date', _('No Date')),
+        )
+
+    def queryset(self, request, queryset):
+        today = timezone.now().date()
+
+        if self.value() == 'today':
+            return queryset.filter(alvdate=today)
+
+        elif self.value() == 'past_7_days':
+            seven_days_ago = today - timedelta(days=7)
+            return queryset.filter(alvdate__gte=seven_days_ago)
+
+        elif self.value() == 'this_month':
+            first_day = today.replace(day=1)
+            return queryset.filter(alvdate__gte=first_day)
+
+        elif self.value() == 'last_2_months':
+            two_months_ago = today - timedelta(days=60)
+            return queryset.filter(alvdate__gte=two_months_ago)
+
+        elif self.value() == 'has_date':
+            return queryset.exclude(alvdate__isnull=True)
+
+        elif self.value() == 'no_date':
+            return queryset.filter(alvdate__isnull=True)
+
+        # 'any' or None: don't filter
+        return queryset
+class CustomDateFieldListFilter(DateFieldListFilter):
+    def choices(self, changelist):
+        today = timezone.now().date()
+        one_week_ago = today - timedelta(days=7)
+        one_month_ago = today - timedelta(days=30)
+        two_months_ago = today - timedelta(days=60)
+
+        field = self.field_path
+        params = self.used_parameters
+
+        return [
+            {
+                'selected': not params,
+                'query_string': changelist.get_query_string(remove=[field]),
+                'display': _('All'),
+            },
+            {
+                'selected': (
+                    str(today.day) == params.get(f'{field}__day') and
+                    str(today.month) == params.get(f'{field}__month') and
+                    str(today.year) == params.get(f'{field}__year')
+                ),
+                'query_string': changelist.get_query_string({
+                    f'{field}__day': str(today.day),
+                    f'{field}__month': str(today.month),
+                    f'{field}__year': str(today.year),
+                }),
+                'display': _('Today'),
+            },
+            {
+                'selected': str(one_week_ago) == params.get(f'{field}__gte'),
+                'query_string': changelist.get_query_string({
+                    f'{field}__gte': str(one_week_ago),
+                }),
+                'display': _('Past 7 days'),
+            },
+            {
+                'selected': (
+                    str(today.month) == params.get(f'{field}__month') and
+                    str(today.year) == params.get(f'{field}__year')
+                ),
+                'query_string': changelist.get_query_string({
+                    f'{field}__month': str(today.month),
+                    f'{field}__year': str(today.year),
+                }),
+                'display': _('This month'),
+            },
+            {
+                'selected': str(two_months_ago) == params.get(f'{field}__gte'),
+                'query_string': changelist.get_query_string({
+                    f'{field}__gte': str(two_months_ago),
+                }),
+                'display': _('Last 2 Months'),
+            },
+        ]
+
 
 class CustomUserAdmin(BaseUserAdmin):
     list_display = ('username', 'first_name','last_name','last_login_with_time')
@@ -116,22 +223,106 @@ admin.site.register(User, CustomUserAdmin)
 
 from import_export.admin import ImportExportModelAdmin
 
+class DumpDataForm(forms.ModelForm):
+    class Meta:
+        model = DumpData
+        fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if isinstance(field, forms.ModelChoiceField):
+                # Accessing the widget and modifying its inner Select widget's attributes
+                field.widget.widget.attrs.update({'style': 'width: 250px;'})
+
+            elif isinstance(field, forms.CharField):
+                field.widget.attrs.update({'style': 'width: 300px;'})
+
+            elif isinstance(field, forms.DateField):
+                field.widget.attrs.update({'style': 'width: 230px;'})
+
+            elif isinstance(field, forms.ChoiceField):
+                field.widget.attrs.update({'style': 'width: 310px;'})
+
+            elif isinstance(field, forms.IntegerField):
+                field.widget.attrs.update({'style': 'width: 300px;'})
 
 # @admin.register(DumpData)
 class DumpDataAdmin(ImportExportModelAdmin):
+
+    class Media:
+        css = {
+            'all': (
+                """
+                .field-name, .field-customid {
+                    margin-bottom: 40px;
+                    padding: 5px;
+                }
+                .form-row .field-box {
+                    margin-right: 40px;  /* Space between fields */
+                }
+                .form-row .field-box + .field-box {
+                    margin-left: 20px;  /* Space between fields */
+                }
+                .vDateField input {
+                    width: 250px;
+                }
+                """
+            ),
+        }
+
     resource_class = DumpDataResource
+    form = DumpDataForm  # 👈 this connects your custom form
 
     actions_on_top = False
     actions_on_bottom = False
     date_hierarchy = 'alvdate'
+
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('import/', self.admin_site.admin_view(self.custom_import_redirect))
+        ]
+        return custom_urls + urls
+
+    def custom_import_redirect(self, request):
+        return redirect('http://127.0.0.1:8000/upload-csv/')  # or use reverse('your_view')
+
+
     model = DumpData
+    list_display = ('id', 'name', 'formatted_updatedatetime'
+                    ,'vt', 'vs', 'rank', 'flag','customid',  'pay1','formatted_avaibilitydata',
+                    'onb','formatted_doc', 'formatted_so','formatted_sof','formatted_doc1', 'mobno','remarks',
+                    'rank2','ship2','pay2','emailid', 'vf','vn','formatted_dob',
+                    'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp',
+                    'pump','eng','currency'
+                   )
 
-
-    list_display = ('id', 'name', 'formatted_updatedatetime','vt', 'vs', 'rank', 'rank2', 'flag', 'customid',
-                    'pay1', 'currency', 'pay2', 'formatted_avaibilitydata', 'onb', 'ship2', 'mobno','emailid', 'pump',
-                    'eng', 'formatted_dob', 'cdc', 'passport', 'visa', 'agn', 'sc', 'pay', 'cno', 'comp','vf','vn','formatted_doc',
-                    'formatted_so','formatted_sof','formatted_doc1')
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('name', 'customid'),
+                ('vt', 'vs'),
+                ('rank', 'rank2'),
+                ('flag', 'currency'),
+                ('mobno', 'emailid'),
+                ('pay1', 'pay2'),
+                ('onb', 'ship2'),
+                ('pump', 'eng'),
+                ('alvdate', 'dob'),
+                ('cdc', 'passport'),
+                ('visa', 'agn'),
+                ('sc', 'pay'),
+                ('cno', 'comp'),
+                ('vf', 'vn'),
+                ('doc', 'doc1'),
+                ('so', 'sof'),
+                'remarks',
+            )
+        }),
+    )
 
     def formatted_updatedatetime(self,obj):
         return obj.updatedate.strftime("%d/%m/%Y %H:%M")
@@ -182,7 +373,7 @@ class DumpDataAdmin(ImportExportModelAdmin):
 
 
     list_filter = ['vt', 'vs', 'rank', 'rank2', 'flag', 'onb', 'flag', 'ship2', 'pump', 'eng', 'currency',
-                   'visa', 'sc', 'pay', 'alvdate']
+                   'visa', 'sc', 'pay', AlvDateLastTwoMonthsFilter]
     search_fields = ('name', 'mobno', 'customid', 'passport', 'remarks','emailid','customid',
                                                                                   'cdc','agn','cno','comp','vf','vn','doc',
                      'so','sof','doc1')
@@ -253,9 +444,9 @@ class DumpDataAdmin(ImportExportModelAdmin):
         return False
 
     def has_import_permission(self, request):
-        # if request.user.is_superuser:
-        #     return True
-        return False
+        if request.user.is_superuser:
+            return True
+        # return False
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "rank":

@@ -80,93 +80,171 @@ class DumpDataResource(resources.ModelResource):
             'remarks')
 
     def dehydrate_foreign_key_name_VT(self, obj):
-        return obj.vt.title
+        if obj.vt is None:
+            return ""
+        else:
+            return obj.vt.title
 
     def dehydrate_foreign_key_name_VS(self, obj):
-        return obj.vs.title
+        if obj.vs is None:
+            return ""
+        else:
+            return obj.vs.title
 
     def dehydrate_foreign_key_name_RANK(self, obj):
-        return obj.rank.title
+        if obj.rank is None:
+            return ""
+        else:
+            return obj.rank.title
 
     def dehydrate_foreign_key_name_RANK2(self, obj):
-        return obj.rank.title
+        if obj.rank2 is None:
+            return ""
+        else:
+            return obj.rank2.title
 
     def dehydrate_foreign_key_name_CURRENCY(self, obj):
-        return obj.currency.title
+        if obj.currency is None:
+            return ""
+        else:
+            return obj.currency.title
 
     def dehydrate_foreign_key_name_FLAG(self, obj):
-        return obj.flag.title
+        if obj.flag is None:
+            return ""
+        else:
+            return obj.flag.title
 
     def dehydrate_foreign_key_name_ONBOARD(self, obj):
         flag_value = getattr(obj, 'onb')
         return self.ONBOARD_CHOICES.get(flag_value, flag_value)
 
     def dehydrate_foreign_key_name_SHIP2(self, obj):
-        return obj.ship2.title
+        if obj.ship2 is None:
+            return ""
+        else:
+            obj.ship2.title
 
     def dehydrate_foreign_key_name_PUMP(self, obj):
-        return obj.pump.title
+        if obj.pump is None:
+            return ""
+        else:
+            return obj.pump.title
 
     def dehydrate_foreign_key_name_ENG(self, obj):
         return obj.eng.title
 
     def dehydrate_foreign_key_name_SC(self, obj):
-        return obj.sc.title
+        if obj.sc is None:
+            return ""
+        else:
+            return obj.sc.title
 
     def dehydrate_foreign_key_name_VISA(self, obj):
-        return obj.visa.title
+        if obj.visa is None:
+            return ""
+        else:
+            return obj.visa.title
 
     def dehydrate_foreign_key_name_PAY(self, obj):
-        return obj.pay.title
+        if obj.pay is None:
+            return ""
+        else:
+            return obj.pay.title
 
     def dehydrate_custom_key_name_NAME(self, obj):
-        return obj.name
+        if obj.name is None:
+            return ""
+        else:
+            return obj.name
 
     def dehydrate_custom_key_name_MOBILENO(self, obj):
-        return obj.mobno
+        if obj.mobno is None:
+            return ""
+        else:
+            return obj.mobno
 
     def dehydrate_custom_key_name_ID(self, obj):
-        return obj.customid
+        if obj.customid is None:
+            return ""
+        else:
+            return obj.customid
 
     def dehydrate_custom_key_name_PAY1(self, obj):
-        return obj.pay1
+        if obj.pay1 is None:
+            return ""
+        else:
+            return obj.pay1
 
     def dehydrate_custom_key_name_PAY2(self, obj):
-        return obj.pay2
+        if obj.pay2 is None:
+            return ""
+        else:
+            return obj.pay2
 
     def dehydrate_custom_key_name_AVAIBILITYDATE(self, obj):
-        return obj.alvdate
+        if obj.alvdate is None:
+            return ""
+        else:
+             return obj.alvdate
 
     def dehydrate_custom_key_name_DATEOFBIRTH(self, obj):
-        return obj.alvdate
+        if obj.dob is None:
+            return ""
+        else:
+            return obj.dob
 
     def dehydrate_custom_key_name_CDC(self, obj):
-        return obj.cdc
+        if obj.cdc is None:
+            return ""
+        else:
+            return obj.cdc
 
     def dehydrate_custom_key_name_PASSPORT(self, obj):
-        return obj.passport
+        if obj.passport is None:
+            return ""
+        else:
+            return obj.passport
 
     def dehydrate_custom_key_name_AGN(self, obj):
-        return obj.agn
+        if obj.agn is None:
+            return ""
+        else:
+            return obj.agn
 
     def dehydrate_custom_key_name_CNO(self, obj):
-        return obj.cno
+        if obj.cno is None:
+            return ""
+        else:
+            return obj.cno
 
     def dehydrate_custom_key_name_COMP(self, obj):
-        return obj.comp
+        if obj.comp is None:
+            return ""
+        else:
+             return obj.comp
 
     def dehydrate_custom_key_name_REMARKS(self, obj):
         return obj.remarks
 
     def dehydrate_custom_key_name_ID2(self, obj):
-        return obj.id
+        if obj.id is None:
+            return ""
+        else:
+            return obj.id
 
 
     def dehydrate_custom_key_name_VF(self, obj):
-        return obj.vf
+        if obj.vf is None:
+            return ""
+        else:
+            return obj.vf
 
     def dehydrate_custom_key_name_VN(self, obj):
-        return obj.vn
+        if obj.vn is None:
+            return ""
+        else:
+             return obj.vn
 
     def dehydrate_custom_key_name_DOC(self, obj):
         if obj.doc != None:
@@ -193,7 +271,10 @@ class DumpDataResource(resources.ModelResource):
             ""
 
     def dehydrate_custom_key_name_EMAILID(self, obj):
-        return obj.emailid
+        if obj.emailid is None:
+            return ""
+        else:
+             return obj.emailid
 
     def dehydrate_custom_key_name_UPDATEDDATE(self, obj):
 

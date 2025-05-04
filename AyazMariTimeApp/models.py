@@ -19,7 +19,9 @@ ACTIVE_CHOICES = (
 ONBOARD_CHOICES = (
     ('1', 'YES'),
     ('2', 'NO'),
-    ('3', 'GAP')
+    ('3', 'GAP'),
+    ('4', 'NIL'),
+
 )
 
 
@@ -123,6 +125,8 @@ class RANKMaster(models.Model):
 
     def __str__(self):
         return self.title
+
+
 
 
 

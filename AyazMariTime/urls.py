@@ -17,12 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from AyazMariTimeApp import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("upload-csv/", views.upload_csv, name="upload_csv"),
+
     # path('',include('AyazMariTimeApp.urls'))
 ]
 
 
-admin.site.site_header = "AyazMariTime Admin"
-admin.site.site_title = "AyazMariTime Admin Portal"
-admin.site.index_title = "Welcome to AyazMariTime Admin Portal"
+admin.site.site_header = "Admin Portal"
+admin.site.site_title = "Admin Portal"
+admin.site.index_title = "Admin Portal"

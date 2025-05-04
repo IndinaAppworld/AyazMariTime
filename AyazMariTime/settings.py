@@ -145,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-SESSION_COOKIE_AGE = 1 * 60
+SESSION_COOKIE_AGE = 1 * 6000
 
 
 # TIME_ZONE = 'Asia/Calcutta'
