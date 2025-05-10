@@ -77,7 +77,7 @@ def upload_csv(request):
                     'ship2': parse_fk(SHIP2Master, row['ship2']),
                     'pump': parse_fk(PUMPMaster, row['pump']),
                     'eng': parse_fk(ENGMaster, row['eng']),
-                    'dob': parse_date_safe(row['dob']),
+                    'dob': datetime.strptime(row['dob'], '%d/%m/%Y').strftime('%Y-%m-%d') if row['dob'] else None,
                     'cdc': row['cdc'].upper(),
                     'passport': row['passport'].upper(),
                     'visa': parse_fk(VISAMaster, row['visa']),
@@ -88,23 +88,32 @@ def upload_csv(request):
                     'comp': row['comp'].upper(),
                     'vf': row['vf'].upper(),
                     'vn': row['vn'].upper(),
-                    'doc': parse_date_safe(row['doc']),
-                    'so': parse_date_safe(row['so']),
-                    'sof': parse_date_safe(row['sof']),
-                    'doc1': parse_date_safe(row['doc1']),
+                    'doc': datetime.strptime(row['doc'], '%d/%m/%Y').strftime('%Y-%m-%d') if row['doc'] else None,
+                    'so': datetime.strptime(row['so'], '%d/%m/%Y').strftime('%Y-%m-%d') if row['so'] else None,
+                    'sof': datetime.strptime(row['sof'], '%d/%m/%Y').strftime('%Y-%m-%d') if row['sof'] else None,
+                    'doc1': datetime.strptime(row['doc1'], '%d/%m/%Y').strftime('%Y-%m-%d') if row['doc1'] else None,
                     'remarks': row['remarks'].upper(),
                     'updatedate': datetime.now(),
                 }
 
+                existing_mob = DumpData.objects.filter(mobno=row['mobno'])
+
                 if customid:
-                    obj, created = DumpData.objects.update_or_create(
-                        customid=customid,
-                        defaults=data
-                    )
-                    status = "Inserted" if created else "Updated"
+                    existing_mob = existing_mob.exclude(customid=customid)
+
+                if existing_mob.exists():
+                    status = "Failed: Mobile number already exists"
                 else:
-                    obj = DumpData.objects.create(**data)
-                    status = "Inserted (new, no customid)"
+                    if customid:
+                        obj, created = DumpData.objects.update_or_create(
+                            customid=customid,
+                            defaults=data
+                        )
+                        status = "Inserted" if created else "Updated"
+                    else:
+                        obj = DumpData.objects.create(**data)
+                        status = "Inserted (new, no customid)"
+
 
             except Exception as e:
                 status = f"Failed: {str(e)}"
